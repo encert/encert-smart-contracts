@@ -9,27 +9,27 @@ contract CertificateStorage is Ownable {
 
     mapping(address => mapping(bytes32 => bool)) public data;
     mapping(bytes32 => bool) public revokeList;
-    mapping(address => bool) public issuers;
+    mapping(address => bool) public issuerContracts;
 
-    modifier onlyIssuer {
-        require(issuers[msg.sender]);
+    modifier onlyIssuerContract {
+        require(issuerContracts[msg.sender]);
         _;
     }
 
-    modifier onlyCertificateIssuer(bytes32 _certHash) {
+    modifier onlyCertificateIssuerContract(bytes32 _certHash) {
         require(data[msg.sender][_certHash]);
         _;
     }
     
-    function setData(bytes32 _certHash) public onlyIssuer {
+    function setData(bytes32 _certHash) public onlyIssuerContract {
         data[msg.sender][_certHash] = true;
     }
     
-    function setIssuer(address _newIssuer) public onlyOwner {
-        issuers[_newIssuer] = true;
+    function setIssuerContract(address _newIssuer) public onlyOwner {
+        issuerContracts[_newIssuer] = true;
     }
     
-    function setRevokeList(bytes32 _certHash) public onlyCertificateIssuer(_certHash) {
+    function setRevokeList(bytes32 _certHash) public onlyCertificateIssuerContract(_certHash) {
         revokeList[_certHash] = true;
     }
 }
