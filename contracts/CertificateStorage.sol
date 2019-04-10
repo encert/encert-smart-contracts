@@ -1,42 +1,35 @@
-pragma solidity ^0.5.0;
+pragma solidity 0.5.0;
 
 import "./Ownable.sol";
 
-contract CertificateStorage is Ownable{
 
-    event DataEdited(bytes32 fileHash);
-    event IssuerEdited(address _newIssuer);
-    event CertificateRevoked(bytes32 fileHash);
+contract CertificateStorage is Ownable {
+
+    event IssuerAdded(address _newIssuer);
 
     mapping(address => mapping(bytes32 => bool)) public data;
     mapping(bytes32 => bool) public revokeList;
     mapping(address => bool) public issuers;
 
-
-    modifier onlyIssuer{
-        require(issuers[msg.sender] == true);
+    modifier onlyIssuer {
+        require(issuers[msg.sender]);
         _;
     }
 
-    constructor() public {
+    modifier onlyCertificateIssuer(bytes32 _certHash) {
+        require(data[msg.sender][_certHash]);
+        _;
     }
     
-    function setData(bytes32 _fileHash) public onlyIssuer{
-        data[msg.sender][_fileHash] = true;
-        emit DataEdited( _fileHash);
+    function setData(bytes32 _certHash) public onlyIssuer {
+        data[msg.sender][_certHash] = true;
     }
     
-     function setIssuer(address _newIssuer) public onlyOwner{
+    function setIssuer(address _newIssuer) public onlyOwner {
         issuers[_newIssuer] = true;
-        emit IssuerEdited( _newIssuer);
-
-     }
-    
-    function revokeCertificate(bytes32 _fileHash) public onlyIssuer {
-        revokeList[_fileHash] = true;
-        emit CertificateRevoked( _fileHash);
-
     }
     
+    function setRevokeList(bytes32 _certHash) public onlyCertificateIssuer(_certHash) {
+        revokeList[_certHash] = true;
+    }
 }
-

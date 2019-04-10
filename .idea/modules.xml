@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/encert.iml" filepath="$PROJECT_DIR$/.idea/encert.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/encert-smart-contracts.iml" filepath="$PROJECT_DIR$/.idea/encert-smart-contracts.iml" />
     </modules>
   </component>
 </project>
